@@ -1,0 +1,44 @@
+{
+  "location": "eastus",
+  "identity": {
+    "type": "SystemAssigned"
+  },
+  "properties": {
+    "steps": [
+      {
+        "name": "TerminatePods",
+        "branches": [
+          {
+            "name": "Branch1",
+            "actions": [
+              {
+                "type": "continuous",
+                "name": "AKS Chaos Mesh Pod Failure",
+                "duration": "PT5M",
+                "parameters": [
+                  {
+                    "key": "jsonSpec",
+                    "value": "{\"mode\":\"one\",\"selector\":{\"namespaces\":[\"default\"]}}"
+                  }
+                ],
+                "selectorId": "AKSClusterTarget"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "selectors": [
+      {
+        "id": "AKSClusterTarget",
+        "type": "List",
+        "targets": [
+          {
+            "id": "/subscriptions/sub-id/resourceGroups/rg-id/providers/Microsoft.ContainerService/managedClusters/my-aks",
+            "type": "ChaosTarget"
+          }
+        ]
+      }
+    ]
+  }
+}
